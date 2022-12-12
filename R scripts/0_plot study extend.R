@@ -144,10 +144,26 @@ land      <- st_crop(land, BS.ext)
 land      <- st_transform(land, proj.aezd)
 land      <- st_difference(land, Npland.area)
 
-load("data/Seasonal GLS centroids 2022.RData")
-m2$bear_id <- str_split_fixed(m2$bear.gls, " ",2)[,1]
-m2$year    <- as.numeric(str_split_fixed(m2$bys, " ",3)[,2])
-cap        <- st_as_sf(m2[!duplicated(m2$bear.gls),], coords = c("cap.lon", "cap.lat"), crs = 4326)
+# load("data/Seasonal GLS centroids 2022.RData")
+# m2$bear_id <- str_split_fixed(m2$bear.gls, " ",2)[,1]
+# m2$year    <- as.numeric(str_split_fixed(m2$bys, " ",3)[,2])
+# cap        <- st_as_sf(m2[!duplicated(m2$bear.gls),], coords = c("cap.lon", "cap.lat"), crs = 4326)
+load("data/Full GLS meta data.RData")
+columns <- c("bear.gls","Capture.GLS.on.lon", "Capture.GLS.on.lat","Capture.GLS.off.lon", "Capture.GLS.off.lat")
+m2 <- st_as_sf(meta2[,columns], coords = c("Capture.GLS.on.lon", "Capture.GLS.on.lat"), crs = 4326)
+m3 <- st_as_sf(meta2[,columns], coords = c("Capture.GLS.off.lon", "Capture.GLS.off.lat"), crs = 4326)
+colnames(m2) <- colnames(m3) <- c("bear.gls","lon","lat","geometry")
+cap <- rbind(m2,m3)
+cap <- cap[!duplicated(cap$lat, cap$lon),]
+
+# Greenland capture locations
+GL.cap <- data.frame(gls.id = c("Q178", "Q181"),
+                   date   = as.Date(c("2016-04-10", "2016-05-14")),
+                   lon    = c(-43.169, -32.551),   
+                   lat    = c( 60.515,  68.520))
+GL.cap <- st_as_sf(GL.cap, coords=c("lon","lat"), crs = 4326)
+
+
 
 mainmap <- tm_shape(study.extent) +
   tm_polygons(col=grey(1), border.col="transparent") +
@@ -208,11 +224,16 @@ mainmap <- tm_shape(study.extent) +
 
 
 inset <- globe_plot(60, 12) + 
-  tm_shape(st_cast(study.extent, "LINESTRING")) + tm_lines(col='red', lwd = 2, size =0.8) 
+  tm_shape(st_cast(study.extent, "LINESTRING")) + 
+  tm_lines(col='red', lwd = 2, size =0.8) +
+  
+  tm_shape(GL.cap) +
+  tm_symbols(border.col = grey(1), col="red", shape=21, size =0.5) 
+  
   # tm_shape(st_cast(Greenland.area, "LINESTRING")) + tm_lines(col='red', lwd = 2) 
 
 
-png(paste0("figures/study extend figure.png"), res = 800, width=20, height = 20*ratio, units="cm")
+png(paste0("figures/study extent figure v3.png"), res = 800, width=20, height = 20*ratio, units="cm")
 tmap_options (bg.color = grey(1), basemaps.alpha = 1)
 print(mainmap)
 print(inset, vp = grid::viewport(0.80, 0.24, width = 0.45, height = 0.45))
