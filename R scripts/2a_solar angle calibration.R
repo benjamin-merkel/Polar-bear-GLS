@@ -1,3 +1,10 @@
+library(GeoLight)
+library(TwGeos)
+library(SGAT)
+library(lubridate)
+library(MASS)
+source("R scripts/FUNCTIONS.r")
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ### calibrate solar angle -----
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
