@@ -18,11 +18,11 @@ bgc <- table(twl6b$bgc,twl6b$Deleted)
 bgc2<- bgc[,1]/(bgc[,1]+bgc[,2])
 
 
-png("figures/Proportion of seasons with clean or noisy data.png",units = "cm",width=10,height=10,res = 500)
-opar <- par(mar=c(4,4,0.5,0.5))
+png("figures/Proportion of seasons with clean or noisy data.png",units = "cm",width=13,height=13,res = 500)
+opar <- par(mar=c(4,4,0.8,0.8))
 hist(1-bgc2, xlim=c(0,1), ylim=c(0,100), freq = T, las = 1, xaxs="i", yaxs="i", 
      col=grey(0.2), border = grey(0.2), 
-     main="" , xlab="Proportion labeled as erroneous")
+     main="" , xlab="Proportion of twilight events labeled as likely erroneous")
 abline(v=0.3, col = 2, lty = 2, lwd = 2)
 par(opar)
 dev.off()
