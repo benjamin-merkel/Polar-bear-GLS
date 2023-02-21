@@ -78,10 +78,10 @@ season.col <- brewer.pal(4, "Set2")[c(2,3)]
 mainmap <- tm_shape(study.extent) +
   tm_polygons(col=grey(1), border.col="transparent") +
   
-  tm_shape(autumn_c) +
+  tm_shape(autumn_c[spring_c$year %in% c(2014,2018),]) +
   tm_lines(col=season.col[1], lwd = 0.5) +
   
-  tm_shape(spring_c) +
+  tm_shape(spring_c[spring_c$year %in% c(2020,2016),]) +
   tm_lines(col=season.col[2], lwd = 0.5) +
   
   tm_shape(NPland) +
@@ -128,14 +128,17 @@ mainmap <- tm_shape(study.extent) +
   tm_shape(cap.points[[4]][nrow(cap.points[[4]]),]) +
   tm_symbols(col = 'white', shape = 24, size = symbol.size) +
   
-  tm_add_legend(type="symbol", col = c(season.col, "white"), labels = c("autumn","spring","capture"), shape = 22, size = 1.5) +
+  tm_add_legend(type="symbol", 
+                col = c(rep(grey(0.2), 4), season.col, "white"), 
+                labels = c(paste("ind",1:4),"autumn","spring","capture"), 
+                shape = c(25,23,21,24,22,22,22), size = c(rep(0.9,4),rep(1.2,3))) +
   
   tm_layout(legend.text.size = 1.1,
             legend.position = c("left","bottom"),
             legend.outside = F,
             legend.frame = F)
 
-png(paste0("figures/example seasonal centroid tracks with sea ice 5.png"), res = 800, width=20, height = 20*ratio, units="cm")
+png(paste0("figures/example seasonal centroid tracks with sea ice 6.png"), res = 800, width=20, height = 20*ratio, units="cm")
 tmap_options (bg.color = grey(1), basemaps.alpha = 1)
 print(mainmap)
 dev.off()
