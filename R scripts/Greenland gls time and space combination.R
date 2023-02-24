@@ -273,6 +273,18 @@ for(i in 1:nrow(path2)){
 }
 
 
+# % location coverage throughout the year
+path_year <- path2[!is.na(path2$lat) & !duplicated(paste(path2$bear.gls, as.Date(path2$datetime))),]
+path_year$year <- as.numeric(strftime(path_year$datetime, "%Y"))
+summary(as.numeric(table(paste(path_year$bear.gls,path_year$year))))/720
+table(paste(path_year$bear.gls))/c(751,310)
+#% using just longitudes
+path_year <- path2[!duplicated(paste(path2$bear.gls, as.Date(path2$datetime))),]
+path_year$year <- as.numeric(strftime(path_year$datetime, "%Y"))
+summary(as.numeric(table(paste(path_year$bear.gls,path_year$year))))/720
+table(paste(path_year$bear.gls))/c(751,310)
+
+
 
 m2$distance[is.na(m2$lat.diff)] <- NA
 m2$year     <- str_split_fixed(m2$gys," ",3)[,2]
